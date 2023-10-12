@@ -11,6 +11,17 @@ class BinaryTree:
     def __repr__(self):
         return f"{self.value}"
 
+    def insert(self, value):
+        if value < self.value:
+            if self.left is None:
+                self.left = BinaryTree(value, parent=self)
+            else:
+                self.left.insert(value)
+        elif value > self.value:
+            if self.right is None:
+                self.right = BinaryTree(value, parent=self)
+            else:
+                self.right.insert(value)
 
 def in_order_traversal(root):
     order_list = []
@@ -38,10 +49,10 @@ def find_successor(tree: BinaryTree, node: BinaryTree) -> BinaryTree:
 
 
 root = BinaryTree(10)
-root.left = BinaryTree(5, parent=root)
-root.right = BinaryTree(15, parent=root)
-root.left.left = BinaryTree(3, parent=root.left)
-root.left.right = BinaryTree(7, parent=root.left)
-root.right.right = BinaryTree(20, parent=root.right)
-root.right.right.left = BinaryTree(12, parent=root.right.right)
-print(find_successor(root, root.right.right.left))
+root.insert(5)
+root.insert(15)
+root.insert(3)
+root.insert(7)
+root.insert(20)
+root.insert(12)
+print(find_successor(root, BinaryTree(7)))
