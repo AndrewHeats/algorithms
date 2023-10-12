@@ -48,11 +48,5 @@ def find_successor(tree: BinaryTree, node: BinaryTree) -> BinaryTree:
     return None
 
 
-root = BinaryTree(10)
-root.insert(5)
-root.insert(15)
-root.insert(3)
-root.insert(7)
-root.insert(20)
-root.insert(12)
-print(find_successor(root, BinaryTree(7)))
+
+print()
