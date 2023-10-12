@@ -28,6 +28,14 @@ class MyTestCase(unittest.TestCase):
         succesor = find_successor(root, BinaryTree(500))
         self.assertEqual(succesor, None)  # add assertion here
 
+    def test_case5(self):
+        succesor = find_successor(None, BinaryTree(500))
+        self.assertEqual(succesor, None)  # add assertion here
+
+    def test_case6(self):
+        succesor = find_successor(None, None)
+        self.assertEqual(succesor, None)  # add assertion here
+
 
 if __name__ == '__main__':
     unittest.main()
