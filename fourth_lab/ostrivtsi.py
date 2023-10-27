@@ -2,7 +2,7 @@ def get_neighbours(matrix: list[list[int]], current_vertex: list[int, int]) -> l
     neighbours = []
     height, width = tuple(current_vertex)
     size = len(matrix)
-    if matrix[height][width] != 0:
+    if matrix[height][width] == 1:
         if height != size - 1:
             if matrix[height + 1][width] == 1:
                 neighbours.append([height + 1, width])
@@ -35,39 +35,44 @@ def get_neighbours(matrix: list[list[int]], current_vertex: list[int, int]) -> l
             if matrix[height - 1][width - 1] == 1:
                 neighbours.append([height - 1, width - 1])
         return neighbours
-    return []
+    return None
 
-
-def get_all_neighbours(matrix: list[list[int]], current_vertex: list[int, int]) -> list[tuple[int, int]]:
-    neighbours = []
+def broad_first_search(matrix, current_vertex, visited):
     queue = [current_vertex]
+    visited.add(current_vertex)
+
     while queue:
-        current_element = queue.pop(0)
-        for neighbour in get_neighbours(matrix, current_element):
-            if neighbour not in neighbours:
+        current_vertex = queue.pop(0)
+        for neighbour in get_neighbours(matrix, current_vertex):
+            if tuple(neighbour) not in visited:
                 queue.append(neighbour)
-        if current_element not in neighbours:
-            neighbours.append(current_element)
-    return neighbours
+                visited.add(tuple(neighbour))
 
+def get_count_of_islands(matrix):
+    if not matrix:
+        return 0
+    size = len(matrix)
+    visited = set()
+    count = 0
 
-def get_count_of_islands(matrix: list[list[int]]) -> int:
-    current_element = [0, 0]
-    count = 1
-    while current_element != [len(matrix) - 1, len(matrix) - 1]:
-        if len(get_neighbours(matrix, current_element)) >= 2 and matrix[current_element[0]][current_element[1]] == 1:
-            for neighbour in get_all_neighbours(matrix, current_element):
-                height, width = neighbour
+    for height in range(size):
+        for width in range(size):
+            if matrix[height][width] == 1 and (height, width) not in visited:
+                broad_first_search(matrix, (height, width), visited)
                 count += 1
-                matrix[height][width] = count
-        current_element[1] += 1
-        if current_element[1] >= len(matrix):
-            current_element[0] += 1
-            current_element[1] = 0
-    return count - 1
+
+    return count
 
 
-matrix = []
-print(get_neighbours(matrix, [3, 1]))
-print(get_all_neighbours(matrix, [3, 1]))
+matrix = [[1, 0, 1, 0, 0, 0, 1, 1, 1, 1],
+          [0, 0, 1, 0, 1, 0, 1, 0, 0, 0],
+          [1, 1, 1, 1, 0, 0, 1, 0, 0, 0],
+          [1, 0, 0, 1, 0, 1, 0, 0, 0, 0],
+          [1, 1, 1, 1, 0, 0, 0, 1, 1, 1],
+          [0, 1, 0, 1, 0, 0, 1, 1, 1, 1],
+          [0, 0, 0, 0, 0, 1, 1, 1, 0, 0],
+          [0, 0, 0, 1, 0, 0, 1, 1, 1, 0],
+          [1, 0, 1, 0, 1, 0, 0, 1, 0, 0],
+          [1, 1, 1, 1, 0, 0, 0, 1, 1, 1]]
+
 print(get_count_of_islands(matrix))
