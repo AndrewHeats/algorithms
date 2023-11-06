@@ -1,78 +1,76 @@
-def get_neighbours(matrix: list[list[int]], current_vertex: list[int, int]) -> list[tuple[int, int]]:
-    neighbours = []
-    height, width = tuple(current_vertex)
-    size = len(matrix)
-    if matrix[height][width] == 1:
-        if height != size - 1:
-            if matrix[height + 1][width] == 1:
-                neighbours.append([height + 1, width])
+def matrix_to_list(matrix):
+    moves = [(1, 0), (0, 1), (1, 1), (-1, 1), (-1, -1), (1, -1), (0, -1), (-1, 0)]
+    adjacency_list = {}
+    for i in range(len(matrix)):
+        for j in range(len(matrix[0])):
+            if matrix[i][j] == 1:
+                adjacency_list[(i, j)] = []
 
-        if width != size - 1:
-            if matrix[height][width + 1] == 1:
-                neighbours.append([height, width + 1])
+    for node in adjacency_list.keys():
+        x_node, y_node = node
+        for x, y in moves:
+            if 0 <= x_node + x < len(matrix) and 0 <= y_node + y < len(matrix[0]):
+                if (x_node + x, y_node + y) in adjacency_list.keys():
+                    adjacency_list[(x_node, y_node)].append((x_node + x, y_node + y))
 
-        if width != 0:
-            if matrix[height][width - 1] == 1:
-                neighbours.append([height, width - 1])
+    return adjacency_list
 
-        if height != 0:
-            if matrix[height - 1][width] == 1:
-                neighbours.append([height - 1, width])
-        # diagonal neighbours
-        if height != size - 1 and width != size - 1:
-            if matrix[height + 1][width + 1] == 1:
-                neighbours.append([height + 1, width + 1])
 
-        if width != size - 1 and height != 0:
-            if matrix[height - 1][width + 1] == 1:
-                neighbours.append([height - 1, width + 1])
+def get_neighbors(adjacency_list, node):
+    return adjacency_list[node]
 
-        if width != 0 and height != size - 1:
-            if matrix[height + 1][width - 1] == 1:
-                neighbours.append([height + 1, width - 1])
 
-        if height != 0 and width != 0:
-            if matrix[height - 1][width - 1] == 1:
-                neighbours.append([height - 1, width - 1])
-        return neighbours
-    return None
-
-def broad_first_search(matrix, current_vertex, visited):
-    queue = [current_vertex]
-    visited.add(current_vertex)
+def breadth_first_search(a_list, node, visited):
+    queue = [node]
+    visited.add(node)
 
     while queue:
-        current_vertex = queue.pop(0)
-        for neighbour in get_neighbours(matrix, current_vertex):
-            if tuple(neighbour) not in visited:
-                queue.append(neighbour)
-                visited.add(tuple(neighbour))
+        current_node = queue.pop(0)
+        for neighbor in get_neighbors(a_list, current_node):
+            if neighbor not in visited:
+                queue.append(neighbor)
+                visited.add(neighbor)
 
-def get_count_of_islands(matrix):
-    if not matrix:
+
+def ostrivtsi(a_list):
+    if not a_list:
         return 0
-    size = len(matrix)
     visited = set()
     count = 0
 
-    for height in range(size):
-        for width in range(size):
-            if matrix[height][width] == 1 and (height, width) not in visited:
-                broad_first_search(matrix, (height, width), visited)
-                count += 1
+    for node in a_list.keys():
+        if node not in visited:
+            breadth_first_search(a_list, node, visited)
+            count += 1
 
     return count
 
 
-matrix = [[1, 0, 1, 0, 0, 0, 1, 1, 1, 1],
-          [0, 0, 1, 0, 1, 0, 1, 0, 0, 0],
-          [1, 1, 1, 1, 0, 0, 1, 0, 0, 0],
-          [1, 0, 0, 1, 0, 1, 0, 0, 0, 0],
-          [1, 1, 1, 1, 0, 0, 0, 1, 1, 1],
-          [0, 1, 0, 1, 0, 0, 1, 1, 1, 1],
-          [0, 0, 0, 0, 0, 1, 1, 1, 0, 0],
-          [0, 0, 0, 1, 0, 0, 1, 1, 1, 0],
-          [1, 0, 1, 0, 1, 0, 0, 1, 0, 0],
-          [1, 1, 1, 1, 0, 0, 0, 1, 1, 1]]
+def read_matrix_from_stream(file_stream):
+    matrix = []
+    for line in file_stream:
+        matrix.append(list(map(int, line.strip().split())))
+        graph = matrix_to_list(matrix)
+    return graph
 
-print(get_count_of_islands(matrix))
+
+def write_result_to_stream(result, file_stream):
+    file_stream.write(str(result))
+
+
+input_file_path = './result/input_matrix.txt'
+output_file_path = './result/output_result.txt'
+
+# Read the matrix from the input file using stream
+with open(input_file_path, 'r') as input_file:
+    graph = read_matrix_from_stream(input_file)
+
+# Calculate the result
+result = ostrivtsi(graph)
+
+# Write the result to the output file using stream
+with open(output_file_path, 'w') as output_file:
+    write_result_to_stream(result, output_file)
+
+print("Matrix read from file:", graph)
+print("Result written to output file:", result)
