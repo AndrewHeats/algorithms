@@ -120,3 +120,10 @@ root.right = BinaryTree(20)
 ```
 
 ***
+### Лабораторна робота №4 (Варіант 3 Рівень 3)
+Лінк на завдання (https://docs.google.com/document/d/16CjrPcgNOjS5e-gQVoijt8fjM4btQdi12OMVsX2LflA/edit#heading=h.nvokndcnrswf)
+
+
+### Лабораторна робота №5 (Варіант 1 Рівень 3)
+
+Задачка про ігровий сервер: (https://drive.google.com/file/d/1TcNhEhOd-Ri2bHEkGuk1x3kn3can_WPc/view)
