@@ -1,6 +1,30 @@
 def get_neighbors(graph, vertex):
     return graph[vertex]
 
+def dijkstra(start_node, graph):
+    distance_dict = {vertex: float('infinity') for vertex in graph.keys()}
+    distance_dict[start_node] = 0
+
+    visited = set()
+    queue = [(0, start_node)]
+
+    while queue:
+        queue.sort()
+        distance, node = queue.pop(0)
+
+        if node in visited:
+            continue
+
+        visited.add(node)
+
+        for neighbor, neighbour_distance in get_neighbors(graph, node):
+            total_distance = distance + neighbour_distance
+
+            if total_distance < distance_dict[neighbor]:
+                distance_dict[neighbor] = total_distance
+                queue.append((total_distance, neighbor))
+
+    return distance_dict
 
 def dijkstra(start_node, graph):
     distance_dict = {vertex: float('infinity') for vertex in graph.keys()}
@@ -30,12 +54,12 @@ def dijkstra(start_node, graph):
 
 def GAMSRV(graph, client_list):
     result_list = []
-    for node in graph.keys():
+    non_clients = list(set(graph.keys()) - set(client_list))
+    for node in non_clients:
         helper = dijkstra(node, graph)
         res = -1
         for client in client_list:
-            if res < helper[client]:
-                res = helper[client]
+            res = max(res, helper[client])
         result_list.append(res)
     return min(result_list)
 
@@ -61,5 +85,25 @@ def write_output_file(file_path, result):
 input_file_path = './results/gamsrv.in'
 output_file_path = './results/gamsrv.out'
 
+graph = {
+    "A": [("H", 1), ("C", 3), ("J", 4), ("B", 8)],
+    "B": [("A", 8), ("J", 9), ("E", 9)],
+    "C": [("I", 2), ("A", 3)],
+    "D": [("H", 20), ("F", 7)],
+    "E": [("B", 9), ("G", 3), ("H", 11), ("F", 15)],
+    "F": [("E", 15), ("G", 6), ("D", 7)],
+    "G": [("J", 4), ("K", 8), ("E", 3), ("F", 6)],
+    "H": [("E", 11),("A", 1), ("D", 20)],
+    "I": [("K", 17), ("J", 5), ("C", 2)],
+    "J": [("E", 2), ("A", 4),("B", 9),("G", 4),("I", 5)],
+    "K": [("J", 1),("G", 8),("I", 17)],
+}
+
+client_list = ["E", "B", "I", "J"]
+clients = ["A", "C", "K", "D", "G"]
+print(GAMSRV(graph, client_list))
+print(GAMSRV(graph, clients))
+
+print(dijkstra("K", graph))
 
 
