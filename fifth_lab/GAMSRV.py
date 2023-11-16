@@ -60,7 +60,7 @@ def GAMSRV(graph, client_list):
         res = -1
         for client in client_list:
             res = max(res, helper[client])
-        result_list.append(res)
+        result_list.append((res, node))
     return min(result_list)
 
 
@@ -93,17 +93,16 @@ graph = {
     "E": [("B", 9), ("G", 3), ("H", 11), ("F", 15)],
     "F": [("E", 15), ("G", 6), ("D", 7)],
     "G": [("J", 4), ("K", 8), ("E", 3), ("F", 6)],
-    "H": [("E", 11),("A", 1), ("D", 20)],
+    "H": [("E", 11), ("A", 1), ("D", 20)],
     "I": [("K", 17), ("J", 5), ("C", 2)],
-    "J": [("E", 2), ("A", 4),("B", 9),("G", 4),("I", 5)],
-    "K": [("J", 1),("G", 8),("I", 17)],
+    "J": [("E", 2), ("A", 4), ("B", 9), ("G", 4), ("I", 5), ("K", 1)],
+    "K": [("J", 1), ("G", 8), ("I", 17)],
 }
 
 client_list = ["E", "B", "I", "J"]
-clients = ["A", "C", "K", "D", "G"]
+clients = ["A", "C", "K", "E", "H"]
 print(GAMSRV(graph, client_list))
 print(GAMSRV(graph, clients))
 
-print(dijkstra("K", graph))
 
 
